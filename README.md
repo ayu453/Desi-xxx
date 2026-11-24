@@ -1,41 +1,37 @@
 # NPL — Navodaya Premier League
 
-NPL is designed as a complete school cricket tournament platform, not a simple scorecard. The pilot begins with a curated Navodaya directory (currently NPL Banka and NPL Bhagalpur) and can expand gradually.
+NPL is a school cricket tournament management workspace designed to grow from a small Navodaya pilot to a wider school network. The app name is NPL; school spaces are labelled by Navodaya/district, such as NPL Banka and NPL Bhagalpur.
 
-## Advanced product modules
-- School directory and school-wise tournament centres
-- League, round robin, group + knockout and knockout tournament formats
-- Team registration, player rosters, squad verification and playing XI
-- Fixture scheduling, groups, stages, toss and match officials
-- Ball-by-ball scoring and complete innings/scorecard data model
-- Public match centre with live updates
-- Points, standings, Net Run Rate and tournament progression
-- Batting/bowling leaderboards, match awards and records
-- Role-based school administration, scorer access and correction audit trail
+## Current browser workspace
+The root `index.html` is a responsive single-page application with:
+- Dashboard and quick tournament overview
+- Navodaya directory with search and add-school flow
+- Tournament creation with league, round-robin, group + knockout and knockout formats
+- Team registration and player roster directory
+- Fixture scheduling by tournament, team, stage, date and venue
+- Live scoring desk with runs, wickets, wides, no-balls, byes, leg-byes and undo
+- Match score preview and batting scorecard
+- Batting/bowling leaderboards and basic team standings
+- Local JSON backup export/import and local demo reset
+- Browser-local persistence
 
-## Repository status
-index.html is the existing browser prototype. It demonstrates the school directory, match creation, basic scoring and scorecard UI using browser-local storage. It is NOT yet a production-ready advanced application and does not yet provide cross-device live sync.
+## Database foundation
+`supabase/schema.sql` contains an expanded Supabase/PostgreSQL foundation for schools, school memberships, tournaments, teams, players, rosters, fixtures, match squads, officials, innings, ball-by-ball deliveries, scoring audit and derived scorecard views. It includes role-aware RLS policies and Realtime publication setup.
 
-supabase/schema.sql is the advanced Supabase data foundation. It adds schools, memberships, tournaments, teams, player rosters, fixtures, squads, innings, ball-by-ball deliveries, officials, scoring audit, derived scorecard views, role-aware RLS policies and Realtime publication.
+## Run
+Open `index.html` in a modern browser. No build step is required for the local prototype.
 
-## Setup
-1. Create a Supabase project.
-2. Review supabase/schema.sql with a developer and apply it to a fresh project.
-3. Configure Supabase URL and anon key as public frontend configuration only.
-4. Implement secure scorer authentication and server-side scoring RPC/Edge Functions.
-5. Connect the frontend to Supabase and subscribe to match, innings and delivery changes.
-6. Deploy the frontend (for example, through the connected Vercel project).
+## Important: prototype vs real live platform
+The current browser workspace stores data in the current browser only. It is **not yet a shared multi-device live scoreboard**. The scoring interface is a working prototype, not an official scorer engine. Before a real tournament, complete:
+1. Supabase project configuration and frontend integration.
+2. Authenticated user accounts and school-approved admin/scorer roles.
+3. Transaction-safe server-side scoring RPC/Edge Functions with cricket-law validation.
+4. Realtime subscriptions for public match pages.
+5. Correct strike rotation, bowler figures, dismissals, fall of wickets, partnerships, innings targets, super overs and match-result handling.
+6. Full points/NRR/tie-break calculations and automatic group/knockout progression.
+7. Automated tests, backup/restore, monitoring and security review.
 
-Never put a Supabase service-role key in browser code. Do not enable anonymous writes to match, innings, player or delivery data.
+Never put a Supabase service-role key in browser code. Do not enable anonymous writes to player, match, innings or delivery data.
 
-## Production requirements
-- Validate and commit every score event transactionally on the server.
-- Corrections/deletions must create an audit record with actor, reason and before/after values.
-- Implement tournament standings/NRR calculations and deterministic knockout advancement.
-- Test legal-ball rules, wides/no-balls, byes/leg-byes, strike changes, wickets, super overs, ties, abandoned matches and corrections.
-- Add backups, monitoring, rate limits and admin recovery procedures.
-- Keep student information private by default. Collect only minimum required data, obtain school/guardian approval where applicable, and never publish personal contact details.
-- Any incentives or verification payments must use a school-approved adult process; do not collect students' personal payment details.
-
-## Current limitations
-The browser prototype remains a local demo. The SQL schema is a data/security foundation, not a complete backend. Server-side scoring RPCs, automated tournament calculations, frontend integration, authentication flows and end-to-end tests remain to be built before real tournament use.
+## Student privacy and school approval
+Collect only information required to run the tournament. Keep student information private by default, do not publish phone numbers or addresses, and obtain school/guardian approvals where applicable. Any rewards or verification reimbursements must use a school-approved adult process, not students' personal payment details.
